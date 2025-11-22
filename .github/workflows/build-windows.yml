@@ -1,0 +1,33 @@
+name: Build Windows Binary
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute version
+        run: |
+          $version = "$(Get-Date -Format 'yyyy.MM.dd')-$(git rev-parse --short HEAD)"
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build release
+        run: cargo build --release --features rtsp
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          files: target/release/stream-utils.exe

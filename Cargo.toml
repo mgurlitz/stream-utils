@@ -1,0 +1,33 @@
+[package]
+authors = ["Michael Gurlitz <michael@gurlitz.org>"]
+edition = "2021"
+# If you change the name here, you must also do it in flake.nix (and run `cargo generate-lockfile` afterwards)
+name = "stream-utils"
+description = "A simple Rust project using Nix"
+version = "1.0.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = []
+rtsp = ["dep:retina", "dep:futures", "dep:mp4"]
+
+[dependencies]
+tokio = { version = "*", features = ["full"] }
+hyper = { version = "*", features = ["client", "http1"] }
+hyper-util = { version = "*", features = ["client", "client-legacy", "http1", "tokio"] }
+hyper-tls = "*"
+native-tls = "*"
+http-body-util = "*"
+m3u8-rs = "*"
+chrono = "*"
+url = "*"
+clap = { version = "*", features = ["derive"] }
+flate2 = "*"
+tokio-stream = "*"
+retina = { version = "*", optional = true }
+futures = { version = "*", optional = true }
+mp4 = { version = "*", optional = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+inotify = "*"
